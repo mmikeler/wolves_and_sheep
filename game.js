@@ -249,16 +249,19 @@ class Game {
 
     if (!figure && this.changeFigure && this.canFigureMoveToPoint(this.changeFigure, x, y)) {
       this.playerMove(x, y)
-      this.setPointsProperty('fill', '#555')
-      this.changeFigure = false
+
     }
 
   }
 
   playerMove = (x, y) => {
-    this.setFigureProperty(this.changeFigure, 'x', x)
-    this.setFigureProperty(this.changeFigure, 'y', y)
-    this.BOT()
+    if (this.isClearPoint(x, y)) {
+      this.setFigureProperty(this.changeFigure, 'x', x)
+      this.setFigureProperty(this.changeFigure, 'y', y)
+      this.setPointsProperty('fill', '#555')
+      this.changeFigure = false
+      this.BOT()
+    }
   }
 
   // UTIL
@@ -286,7 +289,7 @@ class Game {
   }
 
   isClearPoint = (x, y) => {
-    if (x > 1 || x < 0 || y > 1 || y < 0) return false
+    if (x > 1 || x < 0 || y > 1 || y < 0 || x * 10 % 2 == 0 || y * 10 % 2 == 0) return false
     const res = this.isFigurePosition(x, y);
     return !res && res !== undefined ? true : false
   }
