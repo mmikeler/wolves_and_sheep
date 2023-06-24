@@ -1,0 +1,61 @@
+img {
+    width: 100%;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+
+#game {
+    width: 100%;
+    height: 100vh;
+    background: #bdce67;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#bord {
+    margin: auto;
+    display: block;
+}
+
+#display-log {
+    width: min(90%, 400px);
+    margin: auto;
+    text-align: center;
+    font-size: 1.7em;
+    font-family: sans-serif;
+    font-weight: 700;
+    color: #ffe8c3;
+    position: relative;
+    text-shadow: 1px 1px #000;
+}
+
+#display-log__text {
+    position: absolute;
+    padding: 0 30px;
+    left: 0;
+    top: 0;
+    width: calc(100% - 60px);
+    height: 90%;
+    display: flex;
+}
+
+#display-log__text span {
+    margin: auto;
+    width: 100%;
+}
+
+#add-options {
+    width: min(90%, 400px);
+    padding: 15px;
+    font-style: 1.5em;
+    margin: auto;
+}
+
+#reset {
+    margin: auto;
+    width: 5em;
+}
