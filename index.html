@@ -4,9 +4,10 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Wolves and Sheeps</title>
+	<title>Волки и Овцы</title>
 
 	<link rel="stylesheet" href="style.css">
+	<link rel="shortcut icon" href="./img/wolf.png" type="image/x-icon">
 
 	<script src="game.js"></script>
 	<script src="engine.js"></script>
@@ -33,6 +34,13 @@
 			<img src="./img/test_background.png" alt="" />
 			<div id="display-log__text"><span>Игра началась</span></div>
 		</div>
+		<p class="rules">
+			<span>1. Овцы не ходят назад</span>
+			</br>
+			<span>2. Волки ходят свободно</span>
+			</br>
+			<span>3. Вы проиграете, если потеряете более двух овец</span>
+		</p>
 		<canvas id="bord"></canvas>
 		<div id="add-options">
 			<div id="reset" class="btn" title="Сбросить">

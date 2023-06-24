@@ -9,6 +9,8 @@ class Game {
     this.changeFigure = false
     this.interactiveBord = true
     this.wolfScore = 0
+    this.wolfWinScore = 2
+    this.sheepWinScore = 2
   }
 
   getPoint = (x, y) => {
@@ -18,8 +20,8 @@ class Game {
       x: x,
       y: y,
       radius: this.canvas.width / 14,
-      fill: "#555",
-      stroke: { fill: '#999' },
+      fill: "#333",
+      stroke: { fill: '#333' },
       z: 3,
       gameType: 'point'
     }
@@ -194,6 +196,7 @@ class Game {
   start = () => {
     this.bord.objects = []
     this.wolfScore = 0
+    this.sheepScore = 0
     this.getPoints()
     this.getSheepPaths()
     this.getWolfsPaths()
@@ -206,8 +209,12 @@ class Game {
 
       this.bord.draw()
 
-      if (this.wolfScore > 0) {
+      if (this.wolfScore > this.wolfWinScore) {
         this.end('Вы потеряли слишком много овец!')
+      }
+
+      if (this.sheepScore > this.sheepWinScore) {
+        this.end('Волки повержены!')
       }
 
     }, 100)
@@ -242,8 +249,8 @@ class Game {
     const figure = this.isFigurePosition(x, y)
 
     if (figure[0] == 'sheep') {
-      this.setPointsProperty('fill', '#555')
-      this.setPointProperty(x, y, 'fill', '#f00')
+      this.setPointsProperty('fill', '#333')
+      this.setPointProperty(x, y, 'fill', '#458d0f')
       this.changeFigure = figure[1]
     }
 
@@ -258,7 +265,7 @@ class Game {
     if (this.isClearPoint(x, y)) {
       this.setFigureProperty(this.changeFigure, 'x', x)
       this.setFigureProperty(this.changeFigure, 'y', y)
-      this.setPointsProperty('fill', '#555')
+      this.setPointsProperty('fill', '#333')
       this.changeFigure = false
       this.BOT()
     }
@@ -425,6 +432,7 @@ class Game {
       }
       else {
         console.log('OH NO! IM STACK!', activeWolf.np);
+        this.sheepScore += 1
       }
     }
 
