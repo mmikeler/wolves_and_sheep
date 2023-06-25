@@ -9,7 +9,7 @@ class Game {
     this.changeFigure = false
     this.interactiveBord = true
     this.wolfScore = 0
-    this.wolfWinScore = 2
+    this.wolfWinScore = 3
     this.sheepWinScore = 2
   }
 
@@ -209,11 +209,11 @@ class Game {
 
       this.bord.draw()
 
-      if (this.wolfScore > this.wolfWinScore) {
+      if (this.wolfScore >= this.wolfWinScore) {
         this.end('Вы потеряли слишком много овец!')
       }
 
-      if (this.sheepScore > this.sheepWinScore) {
+      if (this.sheepScore >= this.sheepWinScore) {
         this.end('Волки повержены!')
       }
 
