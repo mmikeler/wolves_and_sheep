@@ -10,7 +10,7 @@ class Game {
     this.interactiveBord = true
     this.wolfScore = 0
     this.wolfWinScore = 3
-    this.sheepWinScore = 2
+    this.sheepScore = 0
   }
 
   getPoint = (x, y) => {
@@ -20,8 +20,26 @@ class Game {
       x: x,
       y: y,
       radius: this.canvas.width / 14,
-      fill: "#333",
+      fill: "#fff",
       stroke: { fill: '#333' },
+      z: 3,
+      gameType: 'point'
+    }
+  }
+
+  getPointImg = (x, y) => {
+    let v = this.randomInteger(3, 4)
+
+    if (v == 0) v = 1
+
+    return {
+      relative: { coord: true },
+      type: "image",
+      x: Number(x.toFixed(1)),
+      y: Number(y.toFixed(1)),
+      width: 65,
+      src: `img/point.png`,
+      scale: [1, 1],
       z: 3,
       gameType: 'point'
     }
@@ -41,7 +59,7 @@ class Game {
       }
 
       this.bord.objects.push(
-        this.getPoint(
+        this.getPointImg(
           Number(xRow.toFixed(1)),
           Number(yRow.toFixed(1))
         )
@@ -67,7 +85,7 @@ class Game {
         [0.7, 0.1, 0.7, 0.9],
         [0.9, 0.1, 0.9, 0.9],
       ],
-      stroke: { fill: '#f3f3f3', stroke: '#f3f3f3' }
+      stroke: { fill: '#ddd', stroke: '#777' }
     })
   }
 
@@ -85,7 +103,7 @@ class Game {
   }
 
   getSheepImg = (x, y) => {
-    let v = this.randomInteger(1, 2)
+    let v = this.randomInteger(3, 4)
 
     if (v == 0) v = 1
 
@@ -175,7 +193,7 @@ class Game {
       x: 0.1,
       y: 0.1,
       width: 40,
-      src: "img/wolf.png",
+      src: "img/wolf3.png",
       scale: [1, 1],
       z: 4,
       gameType: 'wolf'
@@ -186,7 +204,7 @@ class Game {
       x: 0.9,
       y: 0.1,
       width: 40,
-      src: "img/wolf2.png",
+      src: "img/wolf4.png",
       scale: [1, 1],
       z: 4,
       gameType: 'wolf'
@@ -249,14 +267,13 @@ class Game {
     const figure = this.isFigurePosition(x, y)
 
     if (figure[0] == 'sheep') {
-      this.setPointsProperty('fill', '#333')
+      this.setPointsProperty('fill', '#fff')
       this.setPointProperty(x, y, 'fill', '#458d0f')
       this.changeFigure = figure[1]
     }
 
     if (!figure && this.changeFigure && this.canFigureMoveToPoint(this.changeFigure, x, y)) {
       this.playerMove(x, y)
-
     }
 
   }
@@ -265,7 +282,7 @@ class Game {
     if (this.isClearPoint(x, y)) {
       this.setFigureProperty(this.changeFigure, 'x', x)
       this.setFigureProperty(this.changeFigure, 'y', y)
-      this.setPointsProperty('fill', '#333')
+      this.setPointsProperty('fill', '#fff')
       this.changeFigure = false
       this.BOT()
     }
