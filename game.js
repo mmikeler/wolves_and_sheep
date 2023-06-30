@@ -326,7 +326,7 @@ class Game {
       })
     }
 
-    if (this.sheepScore >= this.sheepWinScore) {
+    if (this.wolfScore < this.wolfWinScore && this.getAllFiguresByType('sheep').length == 0) {
       this.bord.objects.push({
         relative: true,
         type: "text",
@@ -388,6 +388,15 @@ class Game {
   }
 
   // UTIL
+  getAllFiguresByType = (type) => {
+    const res = []
+    this.bord.objects.forEach((obj, ind) => {
+      if (obj.gameType == type) res.push(ind)
+    })
+
+    return res
+  }
+
   upSheepScore = () => {
     this.sheepScore += 1
     document.getElementById('sheepScore').innerText = this.sheepScore
