@@ -11,6 +11,13 @@ class Game {
     this.wolfScore = 0
     this.wolfWinScore = 3
     this.sheepScore = 0
+    // options
+    this.pointUrl = './img/point.png'
+    this.activePointUrl = './img/active_point.png'
+    // text
+    this.playerTargetMessage = 'Верните овец в загон. Берегитесь волков!'
+    this.playerLoseMess = 'Вы потеряли слишком много овец!'
+    this.playerWinMess = 'Вы молодец! Отара спасена.'
   }
 
   getPoint = (x, y) => {
@@ -28,19 +35,18 @@ class Game {
   }
 
   getPointImg = (x, y) => {
-    let v = this.randomInteger(3, 4)
-
-    if (v == 0) v = 1
+    let v = this.randomInteger(0, 36)
 
     return {
       relative: { coord: true },
       type: "image",
       x: Number(x.toFixed(1)),
       y: Number(y.toFixed(1)),
-      width: 65,
+      width: 50,
       src: `img/point.png`,
       scale: [1, 1],
       z: 3,
+      rotate: this.bord.degreeToRadian(v * 10),
       gameType: 'point'
     }
   }
@@ -67,11 +73,61 @@ class Game {
     }
   }
 
+  resetPoints = () => {
+    this.setPointsProperty('src', this.pointUrl)
+  }
+
+  resetFigures = () => {
+    this.bord.objects.forEach(obj => {
+      if (obj.gameType == 'sheep' && obj?.scale !== [1, 1]) {
+        obj.scale = [1, 1]
+      }
+    })
+  }
+
+  getFences = () => {
+    const f = [
+      [2, 2], [4, 2], [6, 2], [8, 2],
+    ]
+    f.forEach(fence => {
+      this.bord.objects.push({
+        relative: { coord: true },
+        type: "image",
+        x: this.float(fence[0] / 10),
+        y: this.float(fence[1] / 10),
+        width: 25,
+        src: `img/fence3.png`,
+        scale: [1, 1],
+        z: 4,
+      })
+    })
+  }
+
+  getTrees = () => {
+    const f = [
+      [2, 4], [4, 4], [6, 4], [8, 4],
+      [2, 6], [4, 6], [6, 6], [8, 6],
+      [2, 8], [4, 8], [6, 8], [8, 8]
+    ]
+    f.forEach(fence => {
+      this.bord.objects.push({
+        relative: { coord: true },
+        type: "image",
+        x: this.float(fence[0] / 10),
+        y: this.float(fence[1] / 10),
+        width: 25,
+        src: `img/tree2.png`,
+        scale: [1, 1],
+        z: 4,
+      })
+    })
+  }
+
   getSheepPaths = () => {
     this.bord.objects.push({
       relative: true,
       type: "line",
-      lineWidth: 3,
+      lineWidth: 0,
       corners: [
         [0.1, 0.1, 0.9, 0.1],
         [0.1, 0.3, 0.9, 0.3],
@@ -85,7 +141,8 @@ class Game {
         [0.7, 0.1, 0.7, 0.9],
         [0.9, 0.1, 0.9, 0.9],
       ],
-      stroke: { fill: '#ddd', stroke: '#777' }
+      stroke: { fill: '#ddd' },
+      opacity: 0.1
     })
   }
 
@@ -103,7 +160,7 @@ class Game {
   }
 
   getSheepImg = (x, y) => {
-    let v = this.randomInteger(3, 4)
+    let v = this.randomInteger(5, 6)
 
     if (v == 0) v = 1
 
@@ -112,7 +169,7 @@ class Game {
       type: "image",
       x: Number(x.toFixed(1)),
       y: Number(y.toFixed(1)),
-      width: 40,
+      width: 35,
       src: `img/sheep${v}.png`,
       scale: [1, 1],
       z: 4,
@@ -141,7 +198,7 @@ class Game {
     this.bord.objects.push({
       relative: true,
       type: "line",
-      lineWidth: 3,
+      lineWidth: 2,
       corners: [
         [0.7, 0.1, 0.9, 0.3],
         [0.5, 0.1, 0.9, 0.5],
@@ -159,7 +216,9 @@ class Game {
         [0.9, 0.5, 0.5, 0.9],
         [0.9, 0.7, 0.7, 0.9],
       ],
-      stroke: { fill: '#a2bdb9', stroke: '#a2bdb9' }
+      stroke: { fill: '#a2bdb9', stroke: '#a2bdb9' },
+      z: 2,
+      opacity: 0.5
     })
   }
 
@@ -192,8 +251,8 @@ class Game {
       type: "image",
       x: 0.1,
       y: 0.1,
-      width: 40,
-      src: "img/wolf3.png",
+      width: 30,
+      src: "img/wolf5.png",
       scale: [1, 1],
       z: 4,
       gameType: 'wolf'
@@ -203,8 +262,8 @@ class Game {
       type: "image",
       x: 0.9,
       y: 0.1,
-      width: 40,
-      src: "img/wolf4.png",
+      width: 30,
+      src: "img/wolf6.png",
       scale: [1, 1],
       z: 4,
       gameType: 'wolf'
@@ -212,10 +271,14 @@ class Game {
   }
 
   start = () => {
+    clearInterval(this.bordEngine)
+    this.bord.clean()
     this.bord.objects = []
     this.wolfScore = 0
     this.sheepScore = 0
     this.getPoints()
+    this.getFences()
+    this.getTrees()
     this.getSheepPaths()
     this.getWolfsPaths()
     this.getSheeps()
@@ -224,20 +287,19 @@ class Game {
     this.canvas.onclick = this.onclick
     //
     this.bordEngine = setInterval(() => {
-
       this.bord.draw()
 
       if (this.wolfScore >= this.wolfWinScore) {
-        this.end('Вы потеряли слишком много овец!')
+        this.end(this.playerLoseMess)
       }
 
       if (this.sheepScore >= this.sheepWinScore) {
-        this.end('Волки повержены!')
+        this.end(this.playerWinMess)
       }
 
-    }, 100)
+    }, 200)
     //
-    this.displayLog('Сохраните стадо и заблокируйте волков')
+    this.displayLog(this.playerTargetMessage)
   }
 
   init = () => {
@@ -247,7 +309,37 @@ class Game {
 
   end = (mess) => {
     this.interactiveBord = false
-    clearInterval(this.bordEngine)
+    this.bord.objects = []
+    this.bord.clean()
+
+    if (this.wolfScore >= this.wolfWinScore) {
+      this.bord.objects.push({
+        relative: true,
+        type: "text",
+        x: 0.5,
+        y: 0.5,
+        value: "Волки сыты!",
+        font: "Pangolin",
+        size: 0.1,
+        align: "center",
+        fill: "#333",
+      })
+    }
+
+    if (this.sheepScore >= this.sheepWinScore) {
+      this.bord.objects.push({
+        relative: true,
+        type: "text",
+        x: 0.5,
+        y: 0.5,
+        value: "Овцы целы!",
+        font: "Pangolin",
+        size: 0.1,
+        align: "center",
+        fill: "#333",
+      })
+    }
+    this.bord.draw()
     this.displayLog(mess)
   }
 
@@ -267,8 +359,8 @@ class Game {
     const figure = this.isFigurePosition(x, y)
 
     if (figure[0] == 'sheep') {
-      this.setPointsProperty('fill', '#fff')
-      this.setPointProperty(x, y, 'fill', '#458d0f')
+      this.resetFigures()
+      this.setFigureProperty(figure[1], 'scale', [1.5, 1.5])
       this.changeFigure = figure[1]
     }
 
@@ -282,13 +374,25 @@ class Game {
     if (this.isClearPoint(x, y)) {
       this.setFigureProperty(this.changeFigure, 'x', x)
       this.setFigureProperty(this.changeFigure, 'y', y)
-      this.setPointsProperty('fill', '#fff')
+      this.resetFigures()
+
+      if (y == 0.1) {
+        this.deleteFigureFromIndex(this.changeFigure)
+        this.upSheepScore()
+        console.log('Sheeps has point!');
+      }
       this.changeFigure = false
+
       this.BOT()
     }
   }
 
   // UTIL
+  upSheepScore = () => {
+    this.sheepScore += 1
+    document.getElementById('sheepScore').innerText = this.sheepScore
+  }
+
   randomInteger = (min, max) => {
     let rand = min - 0.5 + Math.random() * (max - min + 1);
     return Math.round(rand);
@@ -389,7 +493,12 @@ class Game {
       this.bord.objects.splice(ind, 1)
       console.log('OH, NICE LAMB!');
       this.wolfScore += 1
+      document.getElementById('wolfScore').innerText = this.wolfScore
     }
+  }
+
+  deleteFigureFromIndex = (ind) => {
+    this.bord.objects.splice(ind, 1)
   }
 
   moveFigure = (ind, from, to) => {

@@ -16,10 +16,11 @@ body {
 #game {
     width: 100%;
     height: 100vh;
-    background: #f3f3f3;
+    background: #fefefe;
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
+    /* background: url('./img/bg0.png') no-repeat left bottom / min(30%, 200px) auto; */
 }
 
 #bord {
@@ -31,15 +32,12 @@ body {
     width: min(90%, 400px);
     margin: auto;
     text-align: center;
-    font-size: 1.7em;
+    font-size: 1.5em;
     position: relative;
 }
 
 #display-log__text {
-    position: absolute;
     padding: 0 30px;
-    left: 0;
-    top: 0;
     width: calc(100% - 60px);
     height: 90%;
     display: flex;
@@ -53,13 +51,13 @@ body {
 #add-options {
     width: min(90%, 400px);
     padding: 15px;
-    font-style: 1.5em;
     margin: auto;
+    display: flex;
+    justify-content: space-around;
 }
 
 #reset {
-    margin: auto;
-    width: 5em;
+    width: 4em;
 }
 
 .rules {
@@ -67,8 +65,28 @@ body {
     width: min(calc(90% - 30px), 400px);
     padding: 15px;
     color: #333;
-    font-size: 1.2em;
+    font-size: 1em;
     border-radius: 7px;
     margin: auto;
     text-align: left;
+}
+
+.score {
+    width: 50px;
+    display: flex;
+    align-items: center;
+}
+
+.score span {
+    padding-left: 10px;
+}
+
+.score #wolfScore {
+    padding: 0;
+    padding-right: 10px;
+}
+
+.score img {
+    width: auto;
+    height: 30px;
 }

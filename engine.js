@@ -184,6 +184,12 @@ EasyC.prototype.setRelative = function (obj) {
 	}
 	obj.relative = relative;
 }
+
+EasyC.prototype.clean = function () {
+	var ctx = this.canvas.getContext('2d');
+	ctx.reset()
+}
+
 EasyC.prototype.draw = function (success, i, sorted) {
 	if (!sorted) { sorted = this.getSortedIndexes() }
 	if (!i) { i = 0; }
